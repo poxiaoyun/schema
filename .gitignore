@@ -1,0 +1,11 @@
+.idea
+__debug_bin*
+.DS_Store
+.vscode
+*.code-workspace
+tmp/
+bin/
+*.tgz
+*.crt
+*.key
+*.tar
