@@ -76,27 +76,40 @@ func GenerateWriteSchema(chartpath string, options schema.Options) error {
 	if err != nil {
 		return err
 	}
-
 	item, err := schema.GenerateSchema(valuecontent)
 	if err != nil {
 		return err
 	}
-
-	if !options.IncludeAll {
-		schema.PurgeSchema(item)
+	i18nschemas, err := schema.CompleteI18n(*item)
+	if err != nil {
+		return err
 	}
-
-	if item == nil || (len(item.Properties) == 0 && item.Items == nil) {
-		fmt.Printf("Empty schema of %s\n", valuesfile)
-		return nil
-	}
-
-	for lang, langschema := range schema.SplitSchemaI18n(item) {
-		if err := WriteJson(filepath.Join(chartpath, "i18n", fmt.Sprintf("values.schema.%s.json", lang)), langschema); err != nil {
+	if options.I18nDirectory != "" {
+		if err := os.MkdirAll(filepath.Join(chartpath, options.I18nDirectory), DefaultFilePerm); err != nil {
 			return err
 		}
 	}
-	return WriteJson(filepath.Join(chartpath, "values.schema.json"), item)
+	for lang, langschema := range i18nschemas.Locales {
+		filename := filepath.Join(chartpath, options.I18nDirectory, fmt.Sprintf("values.schema.%s.json", lang))
+		if !options.IncludeAll {
+			schema.PurgeSchema(item)
+		}
+		if langschema.Empty() {
+			fmt.Printf("Empty schema of i18n %s schema\n", lang)
+			return nil
+		}
+		if err := WriteJson(filename, langschema); err != nil {
+			return err
+		}
+	}
+	if !options.IncludeAll {
+		schema.PurgeSchema(item)
+	}
+	if i18nschemas.Orignal.Empty() {
+		fmt.Printf("Empty schema")
+		return nil
+	}
+	return WriteJson(filepath.Join(chartpath, "values.schema.json"), i18nschemas.Orignal)
 }
 
 func WriteJson(filename string, data any) error {

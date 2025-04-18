@@ -1,0 +1,260 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "replicas": {
+      "description": "集群中的实例数",
+      "type": "integer",
+      "title": "Instances",
+      "default": 1,
+      "form": true,
+      "maximum": 5,
+      "minimum": 1,
+      "render": "slider",
+      "step": 2
+    },
+    "cpu": {
+      "description": "每个实例的 CPU 限制",
+      "type": "string",
+      "title": "CPU",
+      "default": "1",
+      "form": true,
+      "maximum": 8,
+      "minimum": 1,
+      "render": "slider",
+      "step": 1
+    },
+    "memory": {
+      "type": "string",
+      "title": "内存",
+      "default": "1Gi",
+      "form": true,
+      "maximum": 16,
+      "minimum": 1,
+      "render": "slider",
+      "step": 1,
+      "unit": "Gi"
+    },
+    "storage": {
+      "type": "string",
+      "title": "存储",
+      "default": "10Gi",
+      "form": true,
+      "maximum": 1024,
+      "minimum": 1,
+      "render": "slider",
+      "step": 1,
+      "unit": "Gi"
+    },
+    "storageClassName": {
+      "type": "string",
+      "title": "存储类型",
+      "form": true,
+      "x-storage-class-enum": {
+        "apiVersion": "storage.k8s.io/v1",
+        "resource": "storageclasses"
+      }
+    },
+    "version": {
+      "type": "string",
+      "title": "版本",
+      "default": "8.0.30",
+      "enum": [
+        "8.0.30"
+      ],
+      "form": true
+    },
+    "annotations": {
+      "type": "object",
+      "properties": {
+        "foo": {
+          "type": "string",
+          "default": "bar"
+        }
+      }
+    },
+    "labels": {
+      "type": "object"
+    },
+    "terminationPolicy": {
+      "type": "string",
+      "title": "Termination Policy",
+      "default": "Delete",
+      "form": true,
+      "render": "radio",
+      "x-enum": [
+        {
+          "text": "删除保护",
+          "value": "DoNotTerminate"
+        },
+        {
+          "text": "删除集群和数据",
+          "value": "Delete"
+        },
+        {
+          "text": "‼️ 删除所有数据包括备份",
+          "value": "WipeOut"
+        }
+      ]
+    },
+    "access": {
+      "type": "object",
+      "properties": {
+        "internal": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        },
+        "external": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "serviceType": {
+              "type": "string",
+              "default": "NodePort",
+              "enum": [
+                "LoadBalancer",
+                "NodePort"
+              ]
+            },
+            "externalTrafficPolicy": {
+              "type": "string",
+              "default": "Cluster",
+              "enum": [
+                "Cluster",
+                "Local"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "monitor": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "backup": {
+      "type": "object",
+      "title": "Backup",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "title": "Enabled",
+          "default": false,
+          "form": true
+        },
+        "cron": {
+          "type": "string",
+          "title": "Cron Expression",
+          "default": "0 2 * * 1",
+          "form": true,
+          "hidden": {
+            "path": "backup.enabled",
+            "value": false
+          },
+          "render": "crontab"
+        },
+        "method": {
+          "type": "string",
+          "title": "Method",
+          "default": "xtrabackup",
+          "form": true,
+          "hidden": {
+            "path": "backup.enabled",
+            "value": false
+          },
+          "render": "radio",
+          "x-enum": [
+            {
+              "text": "Xtrabackup",
+              "value": "xtrabackup"
+            }
+          ]
+        },
+        "pitrEnabled": {
+          "description": "PITR(Point-in-Time Recovery)",
+          "type": "boolean",
+          "title": "PITR",
+          "default": false,
+          "form": true,
+          "hidden": {
+            "path": "backup.enabled",
+            "value": false
+          }
+        },
+        "retentionPeriod": {
+          "type": "string",
+          "title": "Retention Period",
+          "default": "7d",
+          "form": true,
+          "hidden": {
+            "path": "backup.enabled",
+            "value": false
+          },
+          "maximum": 30,
+          "minimum": 1,
+          "render": "slider",
+          "step": 1,
+          "unit": "d"
+        },
+        "s3": {
+          "type": "object",
+          "title": "Backup Repo",
+          "properties": {
+            "bucket": {
+              "type": "string",
+              "title": "Bucket",
+              "form": true
+            },
+            "endpoint": {
+              "type": "string",
+              "title": "Endpoint",
+              "form": true
+            },
+            "accessKey": {
+              "type": "string",
+              "title": "Access Key",
+              "form": true
+            },
+            "secretKey": {
+              "type": "string",
+              "title": "Secret Key",
+              "form": true
+            },
+            "region": {
+              "type": "string",
+              "title": "Region",
+              "default": "us-east-1",
+              "form": true
+            },
+            "forcePathStyle": {
+              "type": "boolean",
+              "title": "Force Path Style",
+              "default": true,
+              "form": true
+            }
+          },
+          "form": true,
+          "hidden": {
+            "path": "backup.enabled",
+            "value": false
+          },
+          "x-s3-enum": true
+        }
+      },
+      "form": true
+    }
+  }
+}

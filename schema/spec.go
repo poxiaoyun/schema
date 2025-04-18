@@ -10,8 +10,13 @@ import (
 
 type Schema struct {
 	SchemaProps `json:",inline"`
+	Comment     string         `json:"-"`
 	ExtraProps  map[string]any `json:"-"`
 	Extensions  map[string]any `json:"-"`
+}
+
+func (s Schema) GetExtension(name string) any {
+	return s.Extensions[name]
 }
 
 type SchemaProps struct {
@@ -55,6 +60,10 @@ type SchemaProps struct {
 	ReadOnly             bool                           `json:"readOnly,omitempty"`
 	XML                  *spec.XMLObject                `json:"xml,omitempty"`
 	ExternalDocs         *spec.ExternalDocumentation    `json:"externalDocs,omitempty"`
+}
+
+func (s Schema) Empty() bool {
+	return len(s.Type) == 0
 }
 
 // MarshalJSON marshal this to JSON
