@@ -69,6 +69,11 @@ func CompleteI18n(schema Schema) (*I18nSchema, error) {
 			}
 			i18nschemas.Locales[locale].Items[i] = *subi18nschema
 		}
+		for locale := range i18nschemas.Locales {
+			if _, ok := subi18nschemas.Locales[locale]; !ok {
+				i18nschemas.Locales[locale].Items[i] = *subi18nschemas.Orignal
+			}
+		}
 	}
 	for i, subi18nschemas := range properties {
 		for locale, subi18nschema := range subi18nschemas.Locales {
@@ -76,6 +81,11 @@ func CompleteI18n(schema Schema) (*I18nSchema, error) {
 				i18nschemas.Locales[locale] = DeepCopySchema(i18nschemas.Orignal)
 			}
 			i18nschemas.Locales[locale].Properties[i].Schema = *subi18nschema
+		}
+		for locale := range i18nschemas.Locales {
+			if _, ok := subi18nschemas.Locales[locale]; !ok {
+				i18nschemas.Locales[locale].Properties[i].Schema = *subi18nschemas.Orignal
+			}
 		}
 	}
 	return i18nschemas, nil
@@ -93,7 +103,7 @@ func CompleteI18nFromComment(schema Schema, comment string) (*I18nSchema, error)
 		key, locale := SplitKeyLocale(sec.Name)
 		if locale != "" {
 			sec.Name = key // reset section name to no locate
-			bylocale[locale] = append(bylocale[key], sec)
+			bylocale[locale] = append(bylocale[locale], sec)
 		} else {
 			nolocale = append(nolocale, sec)
 		}
