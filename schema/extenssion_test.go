@@ -12,12 +12,22 @@ func TestParseComment(t *testing.T) {
 		want    []Section
 	}{
 		{
+			name:    "empty",
+			comment: `# @readyOnly`,
+			want: []Section{
+				{
+					Name: "@readyOnly",
+				},
+			},
+		},
+		{
 			name:    "test0",
 			comment: `## ;;; @title "Architecture" @x-enum single="Single";cluster="Cluster Mode"`,
 			want: []Section{
 				{
 					Name:  "@title",
 					Value: "Architecture",
+					Raw:   `"Architecture" `,
 				},
 				{
 					Name: "@x-enum",
@@ -25,6 +35,7 @@ func TestParseComment(t *testing.T) {
 						{Name: "single", Value: "Single"},
 						{Name: "cluster", Value: "Cluster Mode"},
 					},
+					Raw: `single="Single";cluster="Cluster Mode"`,
 				},
 			},
 		},
@@ -35,6 +46,7 @@ func TestParseComment(t *testing.T) {
 				{
 					Name:  "@enum",
 					Value: "8.0.30",
+					Raw:   "8.0.30",
 				},
 			},
 		},
@@ -44,16 +56,11 @@ func TestParseComment(t *testing.T) {
 			want: []Section{
 				{
 					Name:  "@description",
-					Value: "PITR(Point-in-Time Recovery)",
-				},
-			},
-		},
-		{
-			name:    "empty",
-			comment: `# @empty`,
-			want: []Section{
-				{
-					Name: "@empty",
+					Value: "PITR(Point-in-Time",
+					Options: []Option{
+						{Name: "Recovery)", Value: ""},
+					},
+					Raw: "PITR(Point-in-Time Recovery)",
 				},
 			},
 		},
@@ -62,7 +69,7 @@ func TestParseComment(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := ParseComment(tt.comment)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ParseComment() got = %v, want %v", got, tt.want)
+				t.Errorf("ParseComment() got = %#v, want %#v", got, tt.want)
 			}
 		})
 	}

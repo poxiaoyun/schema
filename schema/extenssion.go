@@ -98,8 +98,8 @@ func (p *Parser) ParseSection() []Section {
 			break
 		}
 	}
-	secname, _, ok := p.ReadIdentity()
-	if len(secname) == 0 || !ok {
+	secname, _, _ := p.ReadIdentity()
+	if len(secname) == 0 {
 		return nil
 	}
 	if secname[0] != '@' {
@@ -129,8 +129,8 @@ func (p *Parser) parseSection(secname []byte) []Section {
 		}
 		if key[0] == '@' {
 			// end of this section
-			p.Rewind()
-			sec.Raw = string(p.Data[startpos:p.Pos])
+			// p.Rewind()
+			sec.Raw = string(p.Data[startpos : p.Pos-len(key)-1])
 			return append([]Section{sec}, p.parseSection(key)...)
 		}
 		if c == '=' {
@@ -140,7 +140,7 @@ func (p *Parser) parseSection(secname []byte) []Section {
 				break
 			}
 		} else {
-			if len(sec.Options) == 0 {
+			if len(sec.Value) == 0 {
 				sec.Value = string(key)
 			} else {
 				sec.Options = append(sec.Options, Option{Name: string(key), Value: ""})
@@ -236,6 +236,10 @@ func SchemaOptionHandler(schema *Schema, sec Section) {
 }
 
 func DefaultOptionHandler(schema *Schema, kind string, sec Section) {
+	if sec.Value == "" && len(sec.Options) == 0 {
+		SetSchemaProp(schema, kind, "true")
+		return
+	}
 	if sec.Value != "" {
 		SetSchemaProp(schema, kind, sec.Value)
 		return
