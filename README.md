@@ -21,7 +21,7 @@
 - integer, string, number 等基本类型，如果没有设置 validation 中的限制，则默认允许为**零值**。
 - 若出现了 const 则表示该值不可修改，则展示为只读项目。
 
-### string
+### string ✅
 
 ```yaml
 type: string
@@ -62,7 +62,7 @@ enum: # 若指定枚举，则可以更改为选择框
 
 由于 date 和 time 没有时区信息，不推荐使用，建议优先选择 date-time。
 
-### integer
+### integer ✅
 
 ```yaml
 type: integer
@@ -74,7 +74,7 @@ multipleOf: 2 # 只能是 2 的倍数
 
 - 在规定了最大值最小值的情况下，可以将数字的输入框自动更改为 slider 等比输入框更友好的交互模式。
 
-### number
+### number ✅
 
 number 范围比 integer 更大，一般来说需要使用到小数时才选择 number
 
@@ -88,7 +88,7 @@ multipleOf: 0.1 # 只能是 0.1 的倍数, 通常用于限制小数位数
 
 - 在规定了最大值最小值的情况下，可以将数字的输入框自动更改为 slider 等比输入框更友好的交互模式。
 
-### object
+### object ✅
 
 ```yaml
 type: object
@@ -105,7 +105,7 @@ properties:
 
 > 在实践中，通常不会使用 required 字段。而是在对应字段上施加 validation 中的限制即可。
 
-### array
+### array ✅
 
 ```yaml
 type: array
@@ -209,7 +209,7 @@ url: /v1/tenants/{{ .tenant }}
 
 为了与 josnschema 定义中的默认属性作区分，扩展属性均以 `x-` 开头。
 
-### x-enum
+### x-enum ✅
 
 相比原始的 enum 增加显示字段，将 value 和展示给用户的属性分开。
 
@@ -222,7 +222,7 @@ x-enum:
     value: 2
 ```
 
-### x-render
+### x-render ✅
 
 表单渲染方式，用于手动指定表单的展示方式
 
@@ -243,7 +243,7 @@ x-render: radio
 
 对 enum 使用 单选按钮模式，而非下拉选择框。
 
-### x-resource-enum
+### x-resource-enum ❌
 
 用于从 kubernetes 中加载已经存在的资源
 
@@ -256,7 +256,7 @@ x-resource-enum:
 
 对于 namespace 资源，需要前端自行增加 namespace 后再查询
 
-### x-quantity
+### x-quantity ❌
 
 适用用作表示数量的 string 类型，将字符串视为 quantity 处理, 通常用于 k8s 的资源大小。
 
@@ -338,7 +338,7 @@ x-hidden:
     value: true
 ```
 
-### x-remote-enum
+### x-remote-enum ✅
 
 用于从远程接口加载 enum 选项
 
@@ -385,7 +385,7 @@ x-remote-enum:
 
 > 对于过于复杂的场景，建议增加针对该场景的 扩展。
 
-### x-object-enum
+### x-object-enum ❌
 
 用于从远程加载整个 object
 
@@ -410,7 +410,7 @@ x-object-enum:
 
 - 注意，没有在 properties 中指定的属性应当不被保留。
 
-### x-s3-enum
+### x-s3-enum ✅
 
 用于从已有的 s3 提供者加载 s3 配置。
 
