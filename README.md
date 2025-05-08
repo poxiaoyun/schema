@@ -84,6 +84,7 @@ default: 0.2
 maximum: 1.0
 minimum: 0.1
 multipleOf: 0.1 # 只能是 0.1 的倍数, 通常用于限制小数位数
+x-increasing-only: true # 只能是相同或者增大的数字
 ```
 
 - 在规定了最大值最小值的情况下，可以将数字的输入框自动更改为 slider 等比输入框更友好的交互模式。
