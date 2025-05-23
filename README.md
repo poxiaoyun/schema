@@ -10,7 +10,7 @@
 
 ## 工具
 
-- [helm-schema](cmd/helm-schema/README.md), 用于从 helm chart 的 values.yaml 文件生成 schema 文件。
+- [chart-built-tool](https://github.com/poxiaoyun/build-tool/tree/main/cmd/chart-build-tool), 用于从 helm chart 的 values.yaml 文件生成 schema 文件。
 
 ## 表单渲染
 
