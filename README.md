@@ -455,6 +455,26 @@ x-sku-enum:
   type: gpu # sku 类型 筛选, cpu, gpu, npu, vgpu，多个以 ',' 分割
 ```
 
+### x-storageset-enum
+
+用于在 PAI 中加载存储集信息。
+
+```yaml
+type: object
+properties:
+  kind:
+    type: string
+  name:
+    type: string
+  source:
+    type: string
+  targetPath:
+    type: string
+x-storageset-enum:
+  type: dataset # 存储集类型 筛选, dataset, modelset
+  label-selector: pai.kubegems.io/tag-deepseek in (true),pai.kubegems.io/tag-train in (true)
+```
+
 ## 注意
 
 ### 关于 required（或 require） 字段 ❌
