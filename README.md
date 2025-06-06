@@ -445,6 +445,16 @@ secretKey: ""
 forcePathStyle: true
 ```
 
+### x-sku-enum
+
+用于在 PAI 中加载 sku 信息。
+
+```yaml
+type: string
+x-sku-enum:
+  type: gpu # sku 类型 筛选, cpu, gpu, npu, vgpu，多个以 ',' 分割
+```
+
 ## 注意
 
 ### 关于 required（或 require） 字段 ❌
