@@ -209,6 +209,12 @@ url: /v1/tenants/{.tenant}
 url: /v1/tenants/{{ .tenant }}
 ```
 
+### CEL 表达式
+
+部分扩展中，可能需要更复杂的条件判断，支持使用 CEL 表达式。
+
+例如，过滤返回值中的条件: `metadata.spec.foo == 'bar' && metadata.spec.num > 3`
+
 ## 扩展
 
 为了与 josnschema 定义中的默认属性作区分，扩展属性均以 `x-` 开头。
@@ -249,27 +255,27 @@ x-render: radio
 
 ### x-resource-enum ✅
 
-用于从 kubernetes 中加载已经存在的资源
+用于从 kubernetes 中加载已经存在的资源。
 
-```yaml
-type: string
-x-resource-enum:
-  apiVersion: networking.k8s.io/v1
-  resource: ingressclasses
-```
+> x-resource-enum 适用于需要动态获取 Kubernetes 资源列表的场景，与普通 enum 不同，x-resource-enum 的选项来源于集群中的实际资源而非静态枚举值。
 
-对于 namespace 资源，需要前端自行增加 namespace 后再查询
-
-条件筛选, 支持 label-selector 和 field-selector
+对于 namespace scope 资源，需要前端自行增加 namespace 后再查询
 
 ```yaml
 type: string
 x-resource-enum:
   apiVersion: storage.k8s.io/v1
   resource: storageclasses
-  label-selector: ismc.xiaishiai.cn/access-mode=ReadWriteMany
+  label-selector: ismc.xiaishiai.cn/access-mode-readwritemany==true
   field-selector: provisioner=ceph.rook.io/block
+  selectable: metadata.labels['ismc.xiaishiai.cn/access-mode-readwritemany'] == 'true'
 ```
+
+- apiVersion: 资源的 apiVersion
+- resource: 资源的名称, 如 pods, deployments, configmaps 等
+- label-selector?: 资源的 label 选择器
+- field-selector?: 资源的 field 选择器
+- selectable?: 该资源是否可选的条件表达式
 
 ### x-quantity ❌
 
