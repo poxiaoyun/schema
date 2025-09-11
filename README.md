@@ -260,6 +260,17 @@ x-resource-enum:
 
 对于 namespace 资源，需要前端自行增加 namespace 后再查询
 
+条件筛选, 支持 label-selector 和 field-selector
+
+```yaml
+type: string
+x-resource-enum:
+  apiVersion: storage.k8s.io/v1
+  resource: storageclasses
+  label-selector: ismc.xiaishiai.cn/access-mode=ReadWriteMany
+  field-selector: provisioner=ceph.rook.io/block
+```
+
 ### x-quantity ❌
 
 适用用作表示数量的 string 类型，将字符串视为 quantity 处理, 通常用于 k8s 的资源大小。
