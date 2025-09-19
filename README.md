@@ -475,6 +475,20 @@ x-sku-enum:
   type: gpu # sku 类型 筛选, cpu, gpu, npu, vgpu，多个以 ',' 分割
 ```
 
+### x-resource-enum storageclasses
+
+用于加载存储卷信息及过滤条件
+
+```yaml
+type: string
+x-resource-enum:
+  apiVersion: storage.k8s.io/v1
+  resource: storageclasses
+  selectable: labels['ismc.xiaishiai.cn/access-mode-readwritemany'] === 'true' // 开启前端多节点读写是否可以勾选
+  label-selector: ismc.xiaishiai.cn/access-mode-readwritemany=true // 进行label-selector过滤
+  field-selector: key=value // 进行field-selector过滤
+```
+
 ### x-storageset-enum
 
 用于在 PAI 中加载存储集信息。
