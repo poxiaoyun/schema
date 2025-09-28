@@ -221,15 +221,17 @@ url: /v1/tenants/{{ .tenant }}
 
 ### x-enum ✅
 
-相比原始的 enum 增加显示字段，将 value 和展示给用户的属性分开。
+相比原始的 enum 增加显示字段，将 value 和展示给用户的属性分开,icon为网络路径
 
 ```yaml
 # @x-enum 1=选项1 2=选项2
 x-enum:
   - label: 选项1
     value: 1
+    icon: 可选
   - label: 选项2
     value: 2
+    icon: 可选
 ```
 
 ### x-render ✅
