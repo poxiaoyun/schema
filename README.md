@@ -467,14 +467,22 @@ secretKey: ""
 forcePathStyle: true
 ```
 
-### x-sku-enum
+### x-render = flavor
 
-用于在 PAI 中加载 sku 信息。
+用于在 PAI 中加载 flavor 信息。
+
+```yaml
+type: object
+x-render: flavor
+```
+
+### x-render = moha-model | moha-dataset
+
+用于在 PAI 中加载 moha 信息。
 
 ```yaml
 type: string
-x-sku-enum:
-  type: gpu # sku 类型 筛选, cpu, gpu, npu, vgpu，多个以 ',' 分割
+x-render: moha-model
 ```
 
 ### x-resource-enum storageclasses
@@ -491,24 +499,37 @@ x-resource-enum:
   field-selector: key=value // 进行field-selector过滤
 ```
 
-### x-storageset-enum
+### x-render storagevolume
 
-用于在 PAI 中加载存储集信息。
+用于在 PAI 中加载存储卷信息。
 
 ```yaml
-type: object
-properties:
-  kind:
-    type: string
-  name:
-    type: string
-  source:
-    type: string
-  targetPath:
-    type: string
-x-storageset-enum:
-  type: dataset # 存储集类型 筛选, dataset, modelset
-  label-selector: pai.kubegems.io/tag-deepseek in (true),pai.kubegems.io/tag-train in (true)
+type: string
+x-render: storagevolume
+```
+
+### x-render small-card
+
+使用小卡片展示enum信息
+```yaml
+type: string
+x-render: small-card
+```
+
+### x-render button
+
+使用按钮组展示enum信息
+```yaml
+type: string
+x-render: button
+```
+
+### x-render radio
+
+使用单选按钮展示enum信息
+```yaml
+type: string
+x-render: radio
 ```
 
 ## 注意
